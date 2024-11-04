@@ -1,45 +1,53 @@
 feature_extract_enable : 0
 point_filter_num : 2
-max_iteration : 5
+max_iteration : 7
 dense_map_enable : 1
 filter_size_surf : 0.15
-filter_size_map : 0.3
+filter_size_map : 0.30
 cube_side_length : 20
 grid_size : 40
 patch_size : 8
-img_enable : 1
+img_enable : 0
 lidar_enable : 1
-outlier_threshold : 300 # 78 100 156
+outlier_threshold : 250 # 78 100 156
 ncc_en: false
 ncc_thre: 0
-img_point_cov : 100 # 1000
+img_point_cov : 1000 # 1000-indoor
 laser_point_cov : 0.001 # 0.001
-delta_time: 0.0
+delta_time: 0.0281
 
 common:
     lid_topic:  "/livox/lidar"
     imu_topic:  "/livox/imu"
 
 preprocess:
-    lidar_type: 1 # 1:Livox LiDAR  2:VELO16  3:OUST64  4:XT32  5:Mid360
+    lidar_type: 5 # 1:Livox LiDAR  2:VELO16  3:OUST64  4:XT32  5:Mid360
     scan_line: 4 # 16  64  32
-    blind: 0.5 # blind x m disable
+    blind: 1 # blind x m disable
 
 mapping:
-    acc_cov_scale: 100
+    acc_cov_scale: 100  #1000-indoor   100-outdoor
     gyr_cov_scale: 10000
     extrinsic_T: [ -0.011, -0.02329, 0.04412 ] # horizon 0.05512, 0.02226, -0.0297 # mid360 -0.011, -0.02329, 0.04412 # avia 0.04165, 0.02326, -0.0284 
-    extrinsic_R: [ 1, 0, 0,
-                   0, 1, 0,
-                   0, 0, 1]
+    extrinsic_R: [ 0.999987525559687,  0.002667093232845,  0.004223190583018,
+                  -0.00266998490789,   0.999996204910806,  0.000679223510758,
+                  -0.004221363003204, -0.000690490892945,  0.999990851616514]
+
+
+#[ 1,  0,  0,
+#  0,  1,  0,
+#  0,  0,  1]
 
 pcd_save:
-    pcd_save_en: false
+    pcd_save_en: true
 
 camera:
-    img_topic: /left_camera/image
-    Rcl: [0.0268125, -0.999465, 0.0187293, 
-         -0.157156, -0.0227175, -0.987312,  
-          0.98721, 0.0235289,  -0.157681]  
-    Pcl: [-0.112954, 0.0328782, -0.308706]
-    
+    img_topic: /cam0/image_raw
+    Rcl: [-0.999450318654,    0.032504115275,   -0.006522501949, 
+          -0.002929176623,   -0.282556574818,   -0.959246163376,  
+          -0.033022423681,   -0.958699778094,    0.282496469034]  
+    Pcl: [0.0973, -0.0709, 0.0460]
+
+#         [-0.9993787053340518,    0.03516807894897209,   -0.0023258434756262165, 
+#          -0.007733824175670411, -0.2831992241798044,    -0.9590299199647404,  
+#          -0.034385917007607375, -0.9584160921264812,     0.2832952577516083]

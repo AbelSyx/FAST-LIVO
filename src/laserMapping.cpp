@@ -239,12 +239,11 @@ inline void dump_lio_state_to_log(FILE *fp)
     fflush(fp);  
     #else
     V3D rot_ang(Log(state.rot_end));
-    fprintf(fp, "%lf ", LidarMeasures.lidar_beg_time - first_lidar_time);
-    fprintf(fp, "%lf %lf %lf ", rot_ang(0), rot_ang(1), rot_ang(2));                   // Angle
-    fprintf(fp, "%lf %lf %lf ", state.pos_end(0), state.pos_end(1), state.pos_end(2)); // Pos  
-    fprintf(fp, "%lf %lf %lf ", 0.0, 0.0, 0.0);                                        // omega  
+    Eigen::Quaterniond q(state.rot_end);
+    fprintf(fp, "%.9lf ", LidarMeasures.lidar_beg_time);
+    fprintf(fp, "%.6lf %.6lf %.6lf ", state.pos_end(0), state.pos_end(1), state.pos_end(2)); // Pos  
+    fprintf(fp, "%.9lf %.9lf %.9lf %.9lf ", q.coeffs()[0], q.coeffs()[1], q.coeffs()[2], q.coeffs()[3]);                   // Angle
     fprintf(fp, "%lf %lf %lf ", state.vel_end(0), state.vel_end(1), state.vel_end(2)); // Vel  
-    fprintf(fp, "%lf %lf %lf ", 0.0, 0.0, 0.0);                                        // Acc  
     fprintf(fp, "%lf %lf %lf ", state.bias_g(0), state.bias_g(1), state.bias_g(2));    // Bias_g  
     fprintf(fp, "%lf %lf %lf ", state.bias_a(0), state.bias_a(1), state.bias_a(2));    // Bias_a  
     fprintf(fp, "%lf %lf %lf ", state.gravity(0), state.gravity(1), state.gravity(2)); // Bias_a  
@@ -1798,7 +1797,7 @@ int main(int argc, char** argv)
             <<" "<<state.bias_g.transpose()<<" "<<state.bias_a.transpose()<<" "<<state.gravity.transpose()<<" "<<feats_undistort->points.size()<<endl;
             #endif
         }
-        // dump_lio_state_to_log(fp);
+        dump_lio_state_to_log(fp);
     }
     //--------------------------save map---------------
     // string surf_filename(map_file_path + "/surf.pcd");
